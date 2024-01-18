@@ -1,4 +1,5 @@
 import os
+import logging
 
 # create a function to get files type from a folder
 def get_files_type(path):
@@ -34,7 +35,15 @@ def get_files_grouped_by_type(path, file_type):
 def move_files_to_corresponding_folder(files_grouped_by_type):
     for file_group in files_grouped_by_type:
         for file in file_group['files']:
-            os.replace(os.path.join(path_to_organize, file), os.path.join(path_to_organize, file_group['type'], file))
+            try:
+                source_path = os.path.join(path_to_organize, file)
+                destination_path = os.path.join(path_to_organize, file_group['type'], file)
+
+                os.replace(source_path, destination_path)
+
+            except Exception as e:
+                # Log the exception
+                logging.error(f"Error moving file '{source_path}' to '{destination_path}' folder: {e}")
 
 path_to_organize = input('What path do you want to organize? (paste here): ')
 print('You entered: ' + path_to_organize)
